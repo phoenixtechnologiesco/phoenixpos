@@ -50,16 +50,17 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        // $validate = Validator::make($request->all(), [ 
-        //     'brand_ref_no'            => 'required',
-        //     'parent_company'            => '',
-        //     'brand_name'              => 'required',
-        //     'brand_description'              => '',
-        //     // 'status_id'                 => 'required',
-        // ]);
-        // if ($validate->fails()) {    
+        $validate = Validator::make($request->all(), [ 
+            'brand_ref_no'            => 'required',
+            'parent_company'            => '',
+            'brand_name'              => 'required',
+            'brand_description'              => '',
+            // 'status_id'                 => 'required',
+        ]);
+        if ($validate->fails()) {    
         //    return response()->json("Fields Required", 400);
-        // }
+           return redirect()->back()->withErrors($validate);
+        }
         $brand_adds = array(
             'brand_ref_no'            => $request->brand_ref_no,
             'parent_company'          => $request->parent_company,
@@ -126,7 +127,8 @@ class BrandController extends Controller
             // 'status_id'                 => 'required',
         ]);
         if ($validate->fails()) {    
-           return response()->json("Fields Required", 400);
+        //    return response()->json("Fields Required", 400);
+           return redirect()->back()->withErrors($validate);
         }
         $brand_edits = array(
             'brand_ref_no'            => $request->brand_ref_no,

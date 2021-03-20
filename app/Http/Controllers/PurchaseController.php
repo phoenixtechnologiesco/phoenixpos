@@ -361,7 +361,8 @@ class PurchaseController extends Controller
             }
     
             // return redirect()->back();
-            return redirect('/purchase')->with(['message' => 'Purchase Created Successfully'], 200);
+            return redirect('purchase/gen_invoice/'.$id);
+            // return redirect('/purchase')->with(['message' => 'Purchase Created Successfully'], 200);
             // if($save){
             // 	return response()->json(['data' => $purchase_adds, 'purchase_products' => $purchase_products_save, 'message' => 'Purchase Created Successfully'], 200);
             // }else{
@@ -370,7 +371,9 @@ class PurchaseController extends Controller
 
         }
         else{
-            return response()->json("Add atleast one product", 400);
+            // return response()->json("Add atleast one product", 400);
+            Session::flash('message' , 'Add atleast one product');
+            return redirect()->back();
         }
     }
 
@@ -527,8 +530,7 @@ class PurchaseController extends Controller
                     'purchasereturn_product_barcode'       => $product_barcodes[$key],
                     'warehouse_id'                         => $product[$key]->warehouse_id,
                     'purchasereturn_piece_per_packet'      => $pieces_per_packet[$key],
-                    'purchase_packet_per_carton'            => $packets_per_carton[$key],
-                    // 'purchasereturn_packet_per_carton'     => 4,
+                    'purchasereturn_packet_per_carton'     => $packets_per_carton[$key],
                     'purchasereturn_piece_per_carton'      => $pieces_per_carton[$key],
                     'purchasereturn_pieces_total'          => $products_pieces[$key],
                     'purchasereturn_packets_total'         => $products_packets[$key],
@@ -576,7 +578,7 @@ class PurchaseController extends Controller
             }
     
             // return redirect()->back();
-            Session::flash(['message' => 'Purchase Returned Successfully']);
+            Session::flash('message' , 'Purchase Returned Successfully');
             return redirect('/purchase');
             // ->with(['message' => 'Purchase Returned Successfully'], 200);
     
@@ -587,7 +589,10 @@ class PurchaseController extends Controller
             // }
         }
         else{
-            return response()->json("Add atleast one product", 400);
+            // return response()->json("Add atleast one product", 400);
+            Session::flash('message' , 'Add atleast one product');
+            return redirect()->back();
+
         }
 
     }
@@ -892,7 +897,9 @@ class PurchaseController extends Controller
             $update = DB::table('purchases')->where('purchase_id','=', $purchase_id)->update($purchase_edits);
     
             // return redirect()->back();
-            return redirect('/purchase')->with(['message' => 'Purchase Edited Successfully'], 200);
+            Session::flash('message' , 'Purchase Edited Successfully');
+            return redirect('/purchase');
+            // return redirect('/purchase')->with(['message' => 'Purchase Edited Successfully'], 200);
             // if($update){
             // 	return response()->json(['data' => $purchase_edits, /*'purchase_products' => $purchase_products_update,*/ 'message' => 'Purchase Edited Successfully'], 200);
             // }else{
@@ -902,9 +909,9 @@ class PurchaseController extends Controller
 
         }
         else{
-
-            return response()->json("Add atleast one product", 400);
-
+            // return response()->json("Add atleast one product", 400);
+            Session::flash('message' , 'Add atleast one product');
+            return redirect()->back();
         }
 
     }

@@ -146,34 +146,35 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        // $validate = Validator::make($request->all(), [ 
-        //     'sale_customer_id'         => 'required',
-        //     // 'sale_customer_name'       => '',
-        //     'sale_total_items'         => '',//'sale_product_items'
-        //     'sale_total_qty'           => '',//'sale_product_quantity'
-        //     'sale_free_piece'          => '',
-        //     'sale_free_amount'         => '',
-        //     'sale_status'              => '',
-        //     'sale_note'                => '',
-        //     // 'sale_date'                => '',
-        //     'sale_total_price'         => '',
-        //     'sale_add_amount'          => '',
-        //     'sale_discount'            => '',
-        //     'sale_grandtotal_price'    => '',
-        //     'sale_total_amount_paid'   => '',
-        //     'sale_total_amount_dues'   => '',
-        //     'sale_payment_method'      => '',
-        //     'sale_payment_status'      => '',
-        //     'sale_document'            => '',
-        //     'sale_invoice_id'          => '',
-        //     'sale_invoice_date'        => '',
-        //     'sale_added_by'            => '',
-        //     // 'sale_payment_id'          => '',
-        //     'warehouse_id'                 => '',
-        // ]);
-        // if ($validate->fails()) {    
+        $validate = Validator::make($request->all(), [ 
+            'sale_customer_id'         => '',
+            // 'sale_customer_name'       => '',
+            'sale_total_items'         => '',//'sale_product_items'
+            'sale_total_qty'           => '',//'sale_product_quantity'
+            'sale_free_piece'          => '',
+            'sale_free_amount'         => '',
+            'sale_status'              => '',
+            'sale_note'                => '',
+            // 'sale_date'                => '',
+            'sale_total_price'         => '',
+            'sale_add_amount'          => '',
+            'sale_discount'            => '',
+            'sale_grandtotal_price'    => '',
+            'sale_total_amount_paid'   => '',
+            'sale_total_amount_dues'   => '',
+            'sale_payment_method'      => '',
+            'sale_payment_status'      => '',
+            'sale_document'            => '',
+            'sale_invoice_id'          => '',
+            'sale_invoice_date'        => '',
+            'sale_added_by'            => '',
+            // 'sale_payment_id'          => '',
+            'warehouse_id'                 => '',
+        ]);
+        if ($validate->fails()) {    
         //    return response()->json("Fields Required", 400);
-        // }
+            return redirect('sale/create')->withErrors($validate);
+        }
         $sale_ref_no = $random = Str::random(8); //str_random
         $lastsale = DB::table('sales')->orderBy('sale_id', 'desc')->limit(1)->first();
         $lastid = (string)$lastsale->sale_id+1;
@@ -357,6 +358,7 @@ class SaleController extends Controller
             // $this->genInvoice($id);
             // return redirect()->url('sale/gen_invoice/'.$id);
             return redirect('sale/gen_invoice/'.$id);
+            // return redirect('/sale')->with(['message' => 'Sale Created Successfully'], 200);
             // if($save){
             // 	return response()->json(['data' => $sale_adds, 'sale_products' => $sale_products_save, 'message' => 'Sale Created Successfully'], 200);
             // }else{
@@ -364,7 +366,9 @@ class SaleController extends Controller
             // }
         }
         else{
-            return response()->json("Add atleast one product", 400);
+            // return response()->json("Add atleast one product", 400);
+            Session::flash('message' , 'Add atleast one product');
+            return redirect()->back();
         }
 
     }
@@ -397,6 +401,7 @@ class SaleController extends Controller
         ]);
         if ($validate->fails()) {    
         //    return response()->json("Fields Required", 400);
+            return redirect('sale/returnadd')->withErrors($validate);
         }
         $sale_return_ref_no = $random = Str::random(8); //str_random
         $lastsalereturn = DB::table('sale_returns')->orderBy('sale_return_id', 'desc')->limit(1)->first();
@@ -566,7 +571,9 @@ class SaleController extends Controller
                 $update = DB::table('products')->where('product_id','=', $single_id)->update($product_edits);
             }
     
+            Session::flash('message' , 'Purchase Returned Successfully');
             return redirect()->back();
+            // return redirect('/sale/returnadd');
             // if($save){
             //     return response()->json(['data' => $salereturn_adds, 'salereturn_products' => $salereturn_products_save, 'message' => 'Sale Returned Successfully'], 200);
             // }else{
@@ -574,7 +581,9 @@ class SaleController extends Controller
             // }
         }
         else{
-            return response()->json("Add atleast one product", 400);
+            // return response()->json("Add atleast one product", 400);
+            Session::flash('message' , 'Add atleast one product');
+            return redirect()->back();
         }
 
     }
@@ -634,34 +643,35 @@ class SaleController extends Controller
         $get_sale = DB::table('sales')->where('sale_id', $sale_id)->first();
         $get_customer = DB::table('customers')->where('customer_id', $request->sale_customer_id)->first();
 
-        // $validate = Validator::make($request->all(), [ 
-        //     'sale_customer_id'         => 'required',
-        //     'sale_customer_name'       => '',
-        //     'sale_total_items'         => '',//'sale_product_items'
-        //     'sale_total_qty'           => '',//'sale_product_quantity'
-        //     'sale_free_piece'          => '',
-        //     'sale_free_amount'         => '',
-        //     'sale_status'              => '',
-        //     'sale_note'                => '',
-        //     // 'sale_date'                => '',
-        //     'sale_total_price'         => '',
-        //     'sale_add_amount'          => '',
-        //     'sale_discount'            => '',
-        //     'sale_grandtotal_price'    => '',
-        //     'sale_total_amount_paid'   => '',
-        //     'sale_total_amount_dues'   => '',
-        //     'sale_payment_method'      => '',
-        //     'sale_payment_status'      => '',
-        //     'sale_document'            => '',
-        //     'sale_invoice_id'          => '',
-        //     'sale_invoice_date'        => '',
-        //     'sale_added_by'            => '',
-        //     // 'sale_payment_id'          => '',
-        //     'warehouse_id'                 => '',
-        // ]);
-        // if ($validate->fails()) {    
+        $validate = Validator::make($request->all(), [ 
+            'sale_customer_id'         => 'required',
+            'sale_customer_name'       => '',
+            'sale_total_items'         => '',//'sale_product_items'
+            'sale_total_qty'           => '',//'sale_product_quantity'
+            'sale_free_piece'          => '',
+            'sale_free_amount'         => '',
+            'sale_status'              => '',
+            'sale_note'                => '',
+            // 'sale_date'                => '',
+            'sale_total_price'         => '',
+            'sale_add_amount'          => '',
+            'sale_discount'            => '',
+            'sale_grandtotal_price'    => '',
+            'sale_total_amount_paid'   => '',
+            'sale_total_amount_dues'   => '',
+            'sale_payment_method'      => '',
+            'sale_payment_status'      => '',
+            'sale_document'            => '',
+            'sale_invoice_id'          => '',
+            'sale_invoice_date'        => '',
+            'sale_added_by'            => '',
+            // 'sale_payment_id'          => '',
+            'warehouse_id'                 => '',
+        ]);
+        if ($validate->fails()) {    
         //    return response()->json("Fields Required", 400);
-        // }
+           return redirect()->back()->withErrors($validate);
+        }
 
         $sale_grandtotal_price = $request->sale_grandtotal_price;
         $sale_amount_recieved = $request->sale_amount_recieved;
@@ -931,7 +941,9 @@ class SaleController extends Controller
             $update = DB::table('sales')->where('sale_id', $sale_id)->update($sale_edits);
     
             // return redirect()->back();
-            return redirect('/sale')->with(['message' => 'Sale Edited Successfully'], 200);
+            Session::flash('message' , 'Sale Edited Successfully');
+            return redirect('/sale');
+            // return redirect('/sale')->with(['message' => 'Sale Edited Successfully'], 200);
             // if($update){
             // 	return response()->json(['data' => $sale_edits, /*'sale_products' => $sale_products_update,*/ 'message' => 'Sale Edited Successfully'], 200);
             // }else{
@@ -941,8 +953,9 @@ class SaleController extends Controller
 
         }
         else{
-
-            return response()->json("Add atleast one product", 400);
+            // return response()->json("Add atleast one product", 400);
+            Session::flash('message' , 'Add atleast one product');
+            return redirect()->back();
         }
 
     }

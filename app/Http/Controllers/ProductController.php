@@ -135,7 +135,8 @@ class ProductController extends Controller
             // 'status_id'                     => 'required',
         ]);
         if ($validate->fails()) {    
-           return response()->json("Fields Required", 400);
+        //    return response()->json("Fields Required", 400);
+           return redirect()->back()->withErrors($validate);
         }
         $product_adds = array(
             'product_ref_no'                => $request->product_ref_no,
@@ -271,9 +272,10 @@ class ProductController extends Controller
             'product_info'                  => '',
             // 'status_id'                     => 'required',
         ]);
-        // if ($validate->fails()) {    
+        if ($validate->fails()) {    
         //    return response()->json("Fields Required", 400);
-        // }
+           return redirect()->back()->withErrors($validate);
+        }
         $product_edits = array(
             'product_ref_no'                => $request->product_ref_no,
             'warehouse_id'                  => $request->warehouse_id,
